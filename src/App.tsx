@@ -72,7 +72,7 @@ function App() {
                 to="/"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                DM Assist
+                🐉 DM Assist 🐉
               </NavLink>
             </Typography>
 

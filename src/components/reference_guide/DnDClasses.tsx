@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import {
-  Paper,
   CircularProgress,
   Typography,
   Box,
+  Container,
+  Paper,
+  MenuItem,
   FormControl,
   InputLabel,
   Select,
-  MenuItem,
   Card,
+  CardContent,
   SelectChangeEvent,
 } from "@mui/material";
 
@@ -44,7 +46,7 @@ interface ClassDetails {
 
 function DnDClasses() {
   const [classes, setClasses] = useState<{ name: string; index: string }[]>([]);
-  const [selectedClassIndex, setSelectedClassIndex] = useState<number>(-1);
+  const [selectedClassIndex, setSelectedClassIndex] = useState<string>("");
   const [classDetails, setClassDetails] = useState<ClassDetails | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -64,16 +66,16 @@ function DnDClasses() {
   }, []);
 
   useEffect(() => {
-    if (selectedClassIndex !== -1) {
-      fetchClassDetails(classes[selectedClassIndex].index);
+    if (selectedClassIndex) {
+      fetchClassDetails(selectedClassIndex);
     }
-  }, [selectedClassIndex, classes]);
+  }, [selectedClassIndex]);
 
   const fetchClassDetails = (classIndex: string) => {
     setIsLoading(true);
     fetch(`https://www.dnd5eapi.co/api/classes/${classIndex}`)
       .then((response) => response.json())
-      .then((data: ClassDetails) => {
+      .then((data) => {
         setClassDetails(data);
         setIsLoading(false);
       })
@@ -84,106 +86,76 @@ function DnDClasses() {
   };
 
   const handleClassChange = (event: SelectChangeEvent<string>) => {
-    setSelectedClassIndex(Number(event.target.value));
+    setSelectedClassIndex(event.target.value);
   };
 
-  const displayProficiencies = (proficiencies: Proficiency[]) => {
-    return proficiencies.map((proficiency, index) => (
-      <Typography key={index} style={{ textAlign: "left" }}>
-        {proficiency.name}
-      </Typography>
-    ));
-  };
-
-  const displayEquipment = (
-    equipment: { quantity: number; equipment: Equipment }[]
-  ) => {
-    return equipment.map((item, index) => (
-      <Typography
-        key={index}
-        style={{ textAlign: "left" }}
-      >{`${item.quantity}x ${item.equipment.name}`}</Typography>
-    ));
-  };
-
-  const displayEquipmentOptions = (equipmentOptions: EquipmentOption[]) => {
-    return equipmentOptions.map((option, index) => (
-      <Typography key={index} style={{ textAlign: "left" }}>
-        {option.desc}
-      </Typography>
-    ));
-  };
-
-  const displaySpellcasting = (spellcasting?: Spellcasting) => {
-    if (!spellcasting) return null;
-
-    return (
-      <Box mb={2} sx={{ textAlign: "left" }}>
-        <Typography variant="h4">Spellcasting</Typography>
-        <br />
-        {spellcasting.info.map((info, index) => (
-          <Box key={index} mb={2}>
-            <Typography variant="subtitle1">{info.name}</Typography>
-            {info.desc.map((desc, descIndex) => (
-              <Typography key={descIndex}>{desc}</Typography>
+  const displayComplexData = (value: any, level = 0) => {
+    if (Array.isArray(value)) {
+      return value.map((item, index) => (
+        <Box key={index} sx={{ pl: level * 2 }}>
+          {displayComplexData(item, level + 1)}
+        </Box>
+      ));
+    } else if (typeof value === "object" && value !== null) {
+      return (
+        <Card variant="outlined" sx={{ mb: 2, ml: level * 2 }}>
+          <CardContent>
+            {Object.entries(value).map(([key, val], i) => (
+              <Typography key={i} variant="body2" component="div">
+                <strong>{key}:</strong> {displayComplexData(val, level + 1)}
+              </Typography>
             ))}
-          </Box>
-        ))}
-      </Box>
-    );
+          </CardContent>
+        </Card>
+      );
+    } else {
+      return value.toString();
+    }
+  };
+
+  const renderClassDetails = (details: ClassDetails) => {
+    if (!details) return null;
+
+    return Object.entries(details).map(([key, value], i) => (
+      <Typography key={i} variant="body2" component="div" sx={{ mt: 1 }}>
+        <strong>{key}:</strong> {displayComplexData(value)}
+      </Typography>
+    ));
   };
 
   return (
-    <Box sx={{ margin: "auto", textAlign: "center" }}>
-      <FormControl fullWidth>
-        <InputLabel id="class-select-label">Class</InputLabel>
+    <Container sx={{ display: "flex", flexDirection: "column", my: 4 }}>
+      <FormControl fullWidth sx={{ mb: 2 }}>
+        <InputLabel id="class-select-label">Select Class</InputLabel>
         <Select
           labelId="class-select-label"
           id="class-select"
-          value={selectedClassIndex !== -1 ? selectedClassIndex.toString() : ""}
-          label="Class"
+          value={selectedClassIndex}
+          label="Select Class"
           onChange={handleClassChange}
         >
-          {classes.map((classData, index) => (
-            <MenuItem key={index} value={index.toString()}>
+          {classes.map((classData) => (
+            <MenuItem key={classData.index} value={classData.index}>
               {classData.name}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-      <Card variant="outlined" sx={{ mb: 2 }}>
-        {isLoading && <CircularProgress />}
-        {error && <Typography color="error">{error}</Typography>}
-        {classDetails && (
-          <Paper sx={{ padding: 2 }}>
-            <Box mt={4}>
-              <Typography variant="h3">{classDetails.name}</Typography>
-              <Typography>Hit Die: d{classDetails.hit_die}</Typography>
-              <Box mt={2}>
-                <Typography variant="h4" style={{ textAlign: "left" }}>
-                  Proficiencies
-                </Typography>
-                <br />
-                {displayProficiencies(classDetails.proficiencies)}
-                <br />
-              </Box>
-              <Box mt={2}>
-                <Typography variant="h4" style={{ textAlign: "left" }}>
-                  Starting Equipment
-                </Typography>
-                <br />
-                {displayEquipment(classDetails.starting_equipment)}
-                {displayEquipmentOptions(
-                  classDetails.starting_equipment_options
-                )}
-              </Box>
-              <br />
-              {displaySpellcasting(classDetails.spellcasting)}
-            </Box>
-          </Paper>
-        )}
-      </Card>
-    </Box>
+      <Box sx={{ width: "100%" }}>
+        <Paper elevation={3} sx={{ p: 2, minHeight: 500, overflow: "auto" }}>
+          {isLoading && <CircularProgress />}
+          {error && <Typography color="error">{error}</Typography>}
+          {classDetails && (
+            <>
+              <Typography variant="h4" component="h2">
+                {classDetails.name}
+              </Typography>
+              {renderClassDetails(classDetails)}
+            </>
+          )}
+        </Paper>
+      </Box>
+    </Container>
   );
 }
 
