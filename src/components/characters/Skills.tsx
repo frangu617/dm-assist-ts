@@ -1,32 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { CircularProgress, Typography, Box, Container, Paper, MenuItem, FormControl, InputLabel, Select, Tooltip } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import { CircularProgress, Typography, Container } from "@mui/material";
 
-function Skills({ skill }) {
-  const [skills, setSkills] = useState([]);
-  const [selectedSkillIndex, setSelectedSkillIndex] = useState('');
-  const [selectedSkill, setSelectedSkill] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+interface Skill {
+  index: string;
+  name: string;
+  desc: string;
+  ability_score: {
+    name: string;
+  };
+}
+
+interface SkillsProps {
+  skill: { index: string };
+}
+
+const Skills: React.FC<SkillsProps> = ({ skill }) => {
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   let shortSkillName = skill.index;
-  // if(shortSkillName === "animal handling")
-  // {
-  //   shortSkillName = "animal-handling"
-  // }
-  // else if(shortSkillName === "sleight of hand")
-  // {
-  //   shortSkillName = "sleight-of-hand"
-  // }
 
   useEffect(() => {
     setIsLoading(true);
     fetch("https://www.dnd5eapi.co/api/skills")
-      .then(response => response.json())
-      .then(data => {
-        setSkills(data.results);
+      .then((response) => response.json())
+      .then(() => {
         setIsLoading(false);
       })
-      .catch(error => {
+      .catch((error: Error) => {
         setError(error.toString());
         setIsLoading(false);
       });
@@ -38,25 +40,21 @@ function Skills({ skill }) {
     }
   }, [shortSkillName]);
 
-  const fetchSkillDetails = (name) => {
+  const fetchSkillDetails = (name: string) => {
     setIsLoading(true);
     fetch(`https://www.dnd5eapi.co/api/skills/${name}`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data: Skill) => {
         setSelectedSkill(data);
         setIsLoading(false);
       })
-      .catch(error => {
+      .catch((error: Error) => {
         setError(error.toString());
         setIsLoading(false);
       });
   };
 
-  const handleSkillChange = (event) => {
-    setSelectedSkillIndex(event.target.value);
-  };
-
-  const renderSkillData = (data) => {
+  const renderSkillData = (data: Skill | null) => {
     if (!data) return null;
 
     return (
@@ -71,18 +69,19 @@ function Skills({ skill }) {
   };
 
   return (
-    <Container sx={{ display: 'flex', flexDirection: 'column', my: 4 }}>
-      
+    <Container sx={{ display: "flex", flexDirection: "column", my: 4 }}>
       {isLoading && <CircularProgress />}
       {error && <Typography color="error">{error}</Typography>}
       {selectedSkill && (
         <>
-          <Typography variant="h4" component="h2">{selectedSkill.name}</Typography>
+          <Typography variant="h4" component="h2">
+            {selectedSkill.name}
+          </Typography>
           {renderSkillData(selectedSkill)}
         </>
       )}
     </Container>
   );
-}
+};
 
 export default Skills;
