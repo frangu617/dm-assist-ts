@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import {
   Typography,
   MenuItem,
@@ -9,8 +9,10 @@ import {
 } from "@mui/material";
 
 interface Alignment {
+  [x: string]: ReactNode;
   index: string;
   name: string;
+  desc: string;
 }
 
 export default function Alignment() {
@@ -56,10 +58,11 @@ export default function Alignment() {
       });
   };
 
-const handleAlignmentChange = (event: SelectChangeEvent<number>) => {
+const handleAlignmentChange = (event: SelectChangeEvent<string>) => {
   setSelectedAlignment(Number(event.target.value));
 };
-  const renderAlignment = () => {
+
+  const renderAlignment = ( ) => {
     if (alignment.length > 0) {
       return (
         <FormControl fullWidth>
@@ -69,7 +72,7 @@ const handleAlignmentChange = (event: SelectChangeEvent<number>) => {
           <Select
             labelId="alignment-select-label"
             id="alignment-select"
-            value={selectedAlignment ?? ""}
+            value={selectedAlignment != null ? selectedAlignment.toString() : ""}
             label="Alignment"
             onChange={handleAlignmentChange}
           >
@@ -85,11 +88,24 @@ const handleAlignmentChange = (event: SelectChangeEvent<number>) => {
     return null;
   };
 
+  // const renderAlignmentData = (data: Alignment | null) => {
+  //   if (!data) return null;
+
+  //   return (
+  //     <Typography variant="body2" component="div" sx={{ mt: 1 }}>
+  //       <br />
+  //       <strong>Description:</strong> {data.desc}
+  //       <br />
+       
+  //     </Typography>
+  //   );
+  // }
+
   return (
     <div>
       <Typography variant="h4" gutterBottom>
-        Alignment
-        {renderAlignment()}
+        
+          {renderAlignment()}
       </Typography>
     </div>
   );

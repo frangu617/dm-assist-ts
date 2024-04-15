@@ -21,6 +21,8 @@ interface Character {
   skills: string[];
 }
 
+const apiUrl = import.meta.env.VITE_APP_URL;
+
 const CharacterManager: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [expandedCharacterId, setExpandedCharacterId] = useState<string | null>(
@@ -28,7 +30,7 @@ const CharacterManager: React.FC = () => {
   );
 
   useEffect(() => {
-    fetch(`${process.env.VITE_APP_URL}/api/characters`)
+    fetch(`${apiUrl}/api/characters`)
       .then((response) => response.json())
       .then((data: Character[]) => setCharacters(data))
       .catch((error) => console.error("Error fetching characters:", error));
@@ -39,7 +41,7 @@ const CharacterManager: React.FC = () => {
   };
 
   const deleteCharacter = (id: string) => {
-    fetch(`${process.env.VITE_APP_URL}/api/characters/${id}`, {
+    fetch(`${apiUrl}/api/characters/${id}`, {
       method: "DELETE",
     })
       .then(() =>

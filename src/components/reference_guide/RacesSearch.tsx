@@ -126,6 +126,8 @@ function RaceSearch() {
         ));
     }
 
+    // Want to implement this later on
+    
     // const renderSubRaces = (): React.ReactNode => {
     //     // Use the `subraces` state directly
     //     if (subraces.length === 0) return <Typography variant="body1">None</Typography>;

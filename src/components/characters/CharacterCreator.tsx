@@ -6,6 +6,8 @@ import ClassSelector from "./ClassSelector";
 import BackgroundSelector from "./BackgroundSelector";
 import Abilities from "./AbilitySelector";
 import SkillsSelector from "./SkillsSelector";
+// import dotenv from "dotenv";
+// dotenv.config();
 
 interface Character {
   name: string;
@@ -49,10 +51,13 @@ export default function CharacterCreator() {
     description: "",
   });
 
+  const apiUrl = import.meta.env.VITE_APP_URL;
+
+  console.log(apiUrl);
+
   useEffect(() => {
-    fetch(
-      `${process.env.VITE_APP_URL}/api/characters` ||
-        "http://localhost:5000/api/characters"
+    fetch( apiUrl + "/api/characters"
+        // "http://localhost:5000/api/characters"
     )
       .then((response) => response.json())
       .then((data: Character[]) => setCharacters(data))
@@ -67,7 +72,7 @@ export default function CharacterCreator() {
       inventory: newCharacter.inventory, // No need to split and trim here
     };
 
-    fetch(`${process.env.VITE_APP_URL}/api/characters`, {
+    fetch(`${apiUrl}/api/characters`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
