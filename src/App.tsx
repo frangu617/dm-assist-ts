@@ -8,7 +8,7 @@ import {
 import {
   AppBar,
   Toolbar,
-  IconButton,
+  // IconButton,
   Menu,
   MenuItem,
   Typography,
@@ -27,29 +27,32 @@ import MusicSearch from "./components/tools/MusicSearch";
 import MonsterSearch from "./components/reference_guide/MonsterSearch";
 import RacesSearch from "./components/reference_guide/RacesSearch";
 import RulesSearch from "./components/reference_guide/RulesSearch";
-import AbilityScores from "./components/characters/AbilityScore";
+// import AbilityScores from "./components/characters/AbilityScore";
 import DnDClasses from "./components/reference_guide/DnDClasses";
-import Skills from "./components/characters/Skills";
+// import Skills from "./components/characters/Skills";
 import Alignment from "./components/reference_guide/Alignment";
 
 function App() {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [diceMenuAnchorEl, setDiceMenuAnchorEl] = useState(null);
-  const [referenceMenuAnchorEl, setReferenceMenuAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [diceMenuAnchorEl, setDiceMenuAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+  const [referenceMenuAnchorEl, setReferenceMenuAnchorEl] =
+    useState<null | HTMLElement>(null);
 
   const openCharacterMenu = Boolean(anchorEl);
   const openDiceMenu = Boolean(diceMenuAnchorEl);
   const openReferenceMenu = Boolean(referenceMenuAnchorEl);
 
-  const handleCharacterMenuClick = (event) => {
+  const handleCharacterMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleDiceMenuClick = (event) => {
+  const handleDiceMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setDiceMenuAnchorEl(event.currentTarget);
   };
 
-  const handleReferenceMenuClick = (event) => {
+  const handleReferenceMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setReferenceMenuAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
