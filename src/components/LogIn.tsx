@@ -11,7 +11,7 @@ async function loginUser(
   // Placeholder implementation for demonstration purposes
   // You should replace this with the actual implementation
   // This could be a fetch call to your backend API
-
+console.log (username, password)
   // Simulating a successful login with a dummy token
   return { token: "dummyToken123" };
 }
