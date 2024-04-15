@@ -129,6 +129,8 @@ const MonsterSearch: React.FC = () => {
 
   return (
     <Container sx={{ display: "flex", flexDirection: "column", my: 4 }}>
+      {isLoading && <Typography>Loading...</Typography>}
+      {error && <Typography>Error: {error}</Typography>}
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel id="monster-select-label">Select Monster</InputLabel>
         <Select

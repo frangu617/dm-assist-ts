@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Grid,
   Button,
-  Checkbox,
-  FormControlLabel,
+  // Checkbox,
+  // FormControlLabel,
   TextField,
   Card,
   CardContent,
-  Tooltip,
+  // Tooltip,
 } from "@mui/material";
-import AbilityScores from "./AbilityScore";
+// import AbilityScores from "./AbilityScore";
 // import Skills from './Skills';
 import RaceSelector from "./RaceSelector";
 import AlignmentSelector from "./AlignmentSelector";
