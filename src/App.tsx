@@ -31,9 +31,10 @@ import DnDClasses from "./components/reference_guide/DnDClasses";
 import Alignment from "./components/reference_guide/Alignment";
 import LoginPage from "./components/users/LogIn";
 import LogoutPage from "./components/users/LogOut";
+import SignUpForm from "./components/users/SignUpForm";
 
 function App() {
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState<string | null>(null);
 
  const handleLoginSuccess = (username: string, token: string) => {
    localStorage.setItem("token", token); // Store token for session persistence
@@ -70,14 +71,24 @@ function App() {
                 </Button>
               </>
             ) : (
-              <Button color="inherit">
-                <NavLink
-                  to="/login"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Login
-                </NavLink>
-              </Button>
+              <>
+                <Button color="inherit">
+                  <NavLink
+                    to="/login"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Login
+                  </NavLink>
+                </Button>
+                <Button color="inherit">
+                  <NavLink
+                    to="/signup"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Sign Up
+                  </NavLink>
+                </Button>
+              </>
             )}
           </Toolbar>
         </AppBar>
@@ -90,8 +101,15 @@ function App() {
             />
             <Route
               path="/logout"
-              element={<LogoutPage onLogout={handleLogout} />}
+              element={
+                <LogoutPage
+                  onLogout={() => console.log("User logged out successfully")}
+                />
+              }
             />
+            <Route path ="/" element={<Home />} />
+            <Route path ="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+            <Route path="/signup" element={<SignUpForm />} />
             <Route path="/create" element={<CharacterCreator />} />
             <Route path="/manager" element={<CharacterManager />} />
             <Route path="/dice" element={<DiceRoller />} />

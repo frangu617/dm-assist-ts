@@ -16,10 +16,14 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Get a list of all characters
+// Get a list of all characters for the current user
 router.get("/", async (req, res) => {
   try {
-    const characters = await Character.find();
+    let query = {};
+    if (!req.currentUser.isAdmin) {  // Assuming you have an isAdmin flag on your User model
+      query.user = req.currentUser._id;
+    }
+    const characters = await Character.find(query);
     res.status(200).json(characters);
   } catch (error) {
     res.status(500).json({ error: "Internal server error: " + error.message });

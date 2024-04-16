@@ -30,6 +30,11 @@ const characterSchema = new mongoose.Schema({
     hitDice: String,
     inventory: [String],
     description: String,
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
 });
 
 const character = mongoose.model('Character', characterSchema);

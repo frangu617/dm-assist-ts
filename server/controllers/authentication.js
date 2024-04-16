@@ -1,56 +1,57 @@
 const router = require("express").Router();
-const db = require("../models");
+const User = require("../models/user"); // Ensure this is pointing to your Mongoose User model
 const bcrypt = require("bcrypt");
-const user = require("../models/user");
-const jwt = require("json-web-token");
+const jwt = require("jsonwebtoken");
+require("dotenv").config(); // Ensure your .env file contains the JWT_SECRET
 
-const { User } = db;
-
-router.post("/", async (req, res) => {
-   try {
-     const user = await User.findOne({ email: req.body.email });
-     if (
-       !user ||
-       !(await bcrypt.compare(req.body.password, user.passwordDigest))
-     ) {
-       return res.status(401).send("Invalid credentials");
-     }
-     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-     res.json({ user, token });
-   } catch (error) {
-     res.status(500).send("Login error");
-   }
+// Create a new user
+router.post("/register", async (req, res) => {
+  try {
+    const { password, ...rest } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      ...rest,
+      password: hashedPassword,
+    });
+    await user.save();
+    res.status(201).json({ message: "User created successfully" });
+  } catch (error) {
+    res.status(400).json({ error: "Could not create user: " + error.message });
+  }
 });
 
-
-router.get('/profile', async (req, res) => {
-  // req.json(req.currentUser)
-    try {
-        // Split the authorization header into [ "Bearer", "TOKEN" ]:
-        const [authenticationMethod, token] = req.headers.authorization.split(' ')
-
-        // Only handle "Bearer" authorization for now 
-        //  (we could add other authorization strategies later):
-        if (authenticationMethod == 'Bearer') {
-
-            // Decode the JWT
-            const result = await jwt.decode(process.env.JWT_SECRET, token)
-
-            // Get the logged in user's id from the payload
-            const { id } = result.value
-
-            // Find the user object using their id:
-            let user = await User.findOne({
-                where: {
-                    userId: id
-                }
-            })
-            res.json(user)
-        }
-    } catch {
-        res.json(null)
+// User login
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
-})
 
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    // Generate a token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
+    res.json({ token, username: user.username }); // Send token and any other needed user info
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error: " + error.message });
+  }
+});
+
+// Get all users
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error: " + error.message });
+  }
+});
 
 module.exports = router;
