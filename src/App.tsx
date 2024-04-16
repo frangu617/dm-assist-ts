@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
   NavLink,
   Routes,
+  // useNavigate,
 } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
-  // IconButton,
-  Menu,
-  MenuItem,
+  // Menu,
+  // MenuItem,
   Typography,
   Container,
   Button,
 } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+// import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import customTheme from "./components/themes/customTheme";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import CharacterManager from "./components/characters/CharacterManager";
@@ -27,38 +27,23 @@ import MusicSearch from "./components/tools/MusicSearch";
 import MonsterSearch from "./components/reference_guide/MonsterSearch";
 import RacesSearch from "./components/reference_guide/RacesSearch";
 import RulesSearch from "./components/reference_guide/RulesSearch";
-// import AbilityScores from "./components/characters/AbilityScore";
 import DnDClasses from "./components/reference_guide/DnDClasses";
-// import Skills from "./components/characters/Skills";
 import Alignment from "./components/reference_guide/Alignment";
+import LoginPage from "./components/users/LogIn";
+import LogoutPage from "./components/users/LogOut";
 
 function App() {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [diceMenuAnchorEl, setDiceMenuAnchorEl] = useState<null | HTMLElement>(
-    null
-  );
-  const [referenceMenuAnchorEl, setReferenceMenuAnchorEl] =
-    useState<null | HTMLElement>(null);
+  const [username, setUsername] = useState(null);
 
-  const openCharacterMenu = Boolean(anchorEl);
-  const openDiceMenu = Boolean(diceMenuAnchorEl);
-  const openReferenceMenu = Boolean(referenceMenuAnchorEl);
+ const handleLoginSuccess = (username: string, token: string) => {
+   localStorage.setItem("token", token); // Store token for session persistence
+   setUsername(username); // Assuming you have a state setter for username
+ };
 
-  const handleCharacterMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleDiceMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setDiceMenuAnchorEl(event.currentTarget);
-  };
-
-  const handleReferenceMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setReferenceMenuAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-    setDiceMenuAnchorEl(null);
-    setReferenceMenuAnchorEl(null);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUsername(null);
   };
 
   return (
@@ -75,160 +60,38 @@ function App() {
                 🐉 DM Assist 🐉
               </NavLink>
             </Typography>
-
-            {/* Character Menu Dropdown */}
-            <Button
-              aria-controls="character-menu"
-              aria-haspopup="true"
-              onClick={handleCharacterMenuClick}
-              color="inherit"
-              endIcon={
-                openCharacterMenu ? (
-                  <ArrowDropDownIcon />
-                ) : (
-                  <ArrowDropDownIcon />
-                )
-              }
-            >
-              Characters
-            </Button>
-            <Menu
-              id="character-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={openCharacterMenu}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>
+            {username ? (
+              <>
+                <Typography variant="h6" style={{ margin: "0 12px" }}>
+                  Welcome, {username}!
+                </Typography>
+                <Button color="inherit" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Button color="inherit">
                 <NavLink
-                  to="/create"
+                  to="/login"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
-                  Create Character
+                  Login
                 </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <NavLink
-                  to="/manager"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Character Manager
-                </NavLink>
-              </MenuItem>
-            </Menu>
-
-            {/* Other Tools Dropdown */}
-            <Button
-              aria-controls="dice-menu"
-              aria-haspopup="true"
-              onClick={handleDiceMenuClick}
-              color="inherit"
-              endIcon={
-                openDiceMenu ? <ArrowDropDownIcon /> : <ArrowDropDownIcon />
-              }
-            >
-              Tools
-            </Button>
-            <Menu
-              id="dice-menu"
-              anchorEl={diceMenuAnchorEl}
-              keepMounted
-              open={openDiceMenu}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>
-                <NavLink
-                  to="/dice"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Dice Roller
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <NavLink
-                  to="/initiative-tracker"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Initiative Tracker
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <NavLink
-                  to="/music-search"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Music
-                </NavLink>
-              </MenuItem>
-            </Menu>
-            <Button
-              aria-controls="reference-menu"
-              aria-haspopup="true"
-              onClick={handleReferenceMenuClick}
-              color="inherit"
-              endIcon={
-                openReferenceMenu ? (
-                  <ArrowDropDownIcon />
-                ) : (
-                  <ArrowDropDownIcon />
-                )
-              }
-            >
-              Reference
-            </Button>
-            <Menu
-              id="reference-menu"
-              anchorEl={referenceMenuAnchorEl}
-              keepMounted
-              open={openReferenceMenu}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>
-                <NavLink
-                  to="/rules-search"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Rules
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <NavLink
-                  to="/monster-search"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Monsters
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <NavLink
-                  to="/races-search"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Races
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <NavLink
-                  to="/classes"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Classes
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <NavLink
-                  to="/alignment"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Alignment
-                </NavLink>
-              </MenuItem>
-            </Menu>
+              </Button>
+            )}
           </Toolbar>
         </AppBar>
         <Container>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route
+              path="/login"
+              element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
+            />
+            <Route
+              path="/logout"
+              element={<LogoutPage onLogout={handleLogout} />}
+            />
             <Route path="/create" element={<CharacterCreator />} />
             <Route path="/manager" element={<CharacterManager />} />
             <Route path="/dice" element={<DiceRoller />} />
