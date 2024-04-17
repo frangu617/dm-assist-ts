@@ -30,10 +30,17 @@ const CharacterManager: React.FC = () => {
   );
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/characters`)
-      .then((response) => response.json())
-      .then((data: Character[]) => setCharacters(data))
-      .catch((error) => console.error("Error fetching characters:", error));
+    const token = localStorage.getItem("token"); // Get the stored token
+    if (token) {
+      fetch(`${apiUrl}/api/characters`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data: Character[]) => setCharacters(data))
+        .catch((error) => console.error("Error fetching characters:", error));
+    }
   }, []);
 
   const toggleExpandCharacter = (id: string) => {
