@@ -3,19 +3,28 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const http = require("http");
 require("dotenv").config();
 
 // Routers
 const characterRoutes = require("./controllers/characterController");
 const userRoutes = require("./controllers/users");
 const authRoutes = require("./controllers/authentication");
-const messageRoutes = require("./controllers/messageController");
+const messageRoutes = require("./controllers/messagesController");
 
 // Middleware
 const {defineCurrentUser} = require("./middleware/defineCurrentUser");
 
 // Constants
 const app = express();
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+
+})
 const port = process.env.PORT || 5000;
 
 // Database Connection
@@ -30,6 +39,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(defineCurrentUser);
+
+// Socket.io for real-time communication
+io.on("connection", (socket) => {
+  console.log('A user connected', socket.id);
+
+  socket.on("disconnect", () => {
+    console.log('User disconnected', socket.id);
+  });
+
+  socket.on("send_message", (data) => {
+    socket.broadcast.emit("receive_message", data);
+  });
+});
 
 // Routes
 app.use("/api/characters", characterRoutes);
