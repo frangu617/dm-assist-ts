@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Grid, Button, TextField, Card, CardContent } from "@mui/material";
 import RaceSelector from "./RaceSelector";
 import AlignmentSelector from "./AlignmentSelector";
@@ -54,15 +54,6 @@ export default function CharacterCreator() {
   const apiUrl = import.meta.env.VITE_APP_URL;
 
   console.log(apiUrl);
-
-  // useEffect(() => {
-  //   fetch( apiUrl + "/api/characters"
-  //       // "http://localhost:5000/api/characters"
-  //   )
-  //     .then((response) => response.json())
-  //     .then((data: Character[]) => setCharacters(data))
-  //     .catch((error) => console.error("Error fetching characters:", error));
-  // }, []);
 
   const handleCharacterSubmit = (e: React.FormEvent) => {
     e.preventDefault();

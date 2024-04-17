@@ -9,6 +9,7 @@ require("dotenv").config();
 const characterRoutes = require("./controllers/characterController");
 const userRoutes = require("./controllers/users");
 const authRoutes = require("./controllers/authentication");
+const messageRoutes = require("./controllers/messageController");
 
 // Middleware
 const {defineCurrentUser} = require("./middleware/defineCurrentUser");
@@ -34,6 +35,7 @@ app.use(defineCurrentUser);
 app.use("/api/characters", characterRoutes);
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
 
 // Production Environment Setup
 if (process.env.NODE_ENV === "production") {

@@ -21,6 +21,7 @@
     "method-override": "^3.0.0",
     "mongoose": "^8.3.1",
     "pg": "^8.11.5",
-    "pg-hstore": "^2.3.4"
+    "pg-hstore": "^2.3.4",
+    "socket.io": "^4.7.5"
   }
 }
