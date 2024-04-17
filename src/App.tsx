@@ -9,12 +9,14 @@ import {
 import {
   AppBar,
   Toolbar,
-  // Menu,
-  // MenuItem,
+  Menu,
+  MenuItem,
   Typography,
   Container,
   Button,
+  IconButton,
 } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 // import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import customTheme from "./components/themes/customTheme";
 import { ThemeProvider, CssBaseline } from "@mui/material";
@@ -35,6 +37,8 @@ import SignUpForm from "./components/users/SignUpForm";
 
 function App() {
   const [username, setUsername] = useState<string | null>(null);
+ const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
 
  const handleLoginSuccess = (username: string, token: string) => {
    localStorage.setItem("token", token); // Store token for session persistence
@@ -47,13 +51,112 @@ function App() {
     setUsername(null);
   };
 
+const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  setAnchorEl(event.currentTarget);
+};
+
+const handleMenuClose = () => {
+  setAnchorEl(null);
+};
+
   return (
     <ThemeProvider theme={customTheme}>
       <CssBaseline />
       <Router>
         <AppBar position="static" style={{ marginBottom: "20px" }}>
           <Toolbar>
-            <Typography variant="h6" style={{ flexGrow: 1 }}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleMenuOpen}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="main-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              keepMounted
+            >
+              <MenuItem onClick={handleMenuClose}>
+                <NavLink
+                  to="/create"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Character Creator
+                </NavLink>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <NavLink
+                  to="/manager"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Character Manager
+                </NavLink>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <NavLink
+                  to="/dice"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Dice Roller
+                </NavLink>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <NavLink
+                  to="/initiative-tracker"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Initiative Tracker
+                </NavLink>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <NavLink
+                  to="/music-search"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Music Search
+                </NavLink>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <NavLink
+                  to="/monster-search"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Monster Search
+                </NavLink>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <NavLink
+                  to="/races-search"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Races Search
+                </NavLink>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <NavLink
+                  to="/rules-search"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Rules Search
+                </NavLink>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <NavLink
+                  to="/classes"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Classes
+                </NavLink>
+              </MenuItem>
+            </Menu>
+            <Typography
+              variant="h6"
+              style={{ flexGrow: 1, marginLeft: "20px" }}
+            >
               <NavLink
                 to="/"
                 style={{ textDecoration: "none", color: "inherit" }}
@@ -107,8 +210,11 @@ function App() {
                 />
               }
             />
-            <Route path ="/" element={<Home />} />
-            <Route path ="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/login"
+              element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
+            />
             <Route path="/signup" element={<SignUpForm />} />
             <Route path="/create" element={<CharacterCreator />} />
             <Route path="/manager" element={<CharacterManager />} />

@@ -55,27 +55,29 @@ export default function CharacterCreator() {
 
   console.log(apiUrl);
 
-  useEffect(() => {
-    fetch( apiUrl + "/api/characters"
-        // "http://localhost:5000/api/characters"
-    )
-      .then((response) => response.json())
-      .then((data: Character[]) => setCharacters(data))
-      .catch((error) => console.error("Error fetching characters:", error));
-  }, []);
+  // useEffect(() => {
+  //   fetch( apiUrl + "/api/characters"
+  //       // "http://localhost:5000/api/characters"
+  //   )
+  //     .then((response) => response.json())
+  //     .then((data: Character[]) => setCharacters(data))
+  //     .catch((error) => console.error("Error fetching characters:", error));
+  // }, []);
 
   const handleCharacterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
     const characterData: Character = {
       ...newCharacter,
       inventory: newCharacter.inventory, // No need to split and trim here
     };
 
-    fetch(`${apiUrl}/api/characters`, {
+    fetch(`${apiUrl}/api/characters/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(characterData),
     })

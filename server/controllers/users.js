@@ -1,11 +1,12 @@
 const router = require("express").Router();
 const User = require("../models/user"); // Ensure this is pointing to your Mongoose User model
 const bcrypt = require("bcrypt");
+const { defineCurrentUser, requiredRoles } = require("../middleware/defineCurrentUser");
 
 // // Create a new user
 router.post("/", async (req, res) => {
   try {
-    const { username, email, password } = req.body; // Destructure to get the username, email, and password directly
+    const { username, email, password, role = "user"} = req.body; // Destructure to get the username, email, and password directly
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -16,6 +17,7 @@ router.post("/", async (req, res) => {
       email,
       password, // Save the hashed password in the password field
       passwordDigest: hashedPassword,
+      role
     });
 
     // Save the new user to the database
@@ -24,7 +26,7 @@ router.post("/", async (req, res) => {
     // Respond with a success message
     res.status(201).json({
       message: "User created successfully",
-      user: { id: user._id, username: user.username, email: user.email }, // Only send back necessary user information
+      user: { id: user._id, username: user.username, email: user.email, role: user.role }, // Only send back necessary user information
     });
   } catch (error) {
     // If an error occurs, respond with an error message
@@ -34,7 +36,7 @@ router.post("/", async (req, res) => {
 
 
 // Get all users (This route should be protected and only accessible by administrators)
-router.get("/", async (req, res) => {
+router.get("/", requiredRoles("admin"), async (req, res) => {
   try {
     const users = await User.find().select("-password"); // Use .select to avoid sending back the password
     res.status(200).json(users);

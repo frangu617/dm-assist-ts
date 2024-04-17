@@ -11,7 +11,7 @@ const userRoutes = require("./controllers/users");
 const authRoutes = require("./controllers/authentication");
 
 // Middleware
-const defineCurrentUser = require("./middleware/defineCurrentUser");
+const {defineCurrentUser} = require("./middleware/defineCurrentUser");
 
 // Constants
 const app = express();
