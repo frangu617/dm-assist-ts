@@ -3,10 +3,12 @@ import { Typography, Button, Card, CardContent, Grid } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import oldTimeyTheme from "./themes/oldTimey";
-import Chat from "./users/Message";
+import ChatWindow from "./users/Message";
+import { CurrentUserProvider } from "./contexts/CurrentUser";
 //Trying to finalize this
 export default function Home() {
     return (
+        <CurrentUserProvider>
         <div>
             <h1>Welcome Dungeon Masters!</h1>
             <Card style={{ marginBottom: 20 }}>
@@ -29,13 +31,10 @@ export default function Home() {
                     <NavLink to="/dice"><Button variant="contained">Roll Some dice</Button></NavLink>
                 </Grid>
             </Grid>
-            <Card style={{ marginTop: 20 }}>
-                <CardContent>
-                    <Typography variant="h6">
-                        <Chat />
-                    </Typography>
-                </CardContent>
-            </Card>
+            
+            <ChatWindow />
+            
         </div>
+        </CurrentUserProvider>
     );
 }

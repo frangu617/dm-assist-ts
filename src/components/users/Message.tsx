@@ -1,50 +1,110 @@
-import { StreamChat, User } from "stream-chat";
+import React, { useState, useEffect } from "react";
+import { Socket } from "socket.io-client";
+import io from "socket.io-client";
 import {
-  Chat,
-  Channel,
-  ChannelHeader,
-  MessageInput,
-  MessageList,
-  Thread,
-  Window,
-} from "stream-chat-react";
+  Box,
+  Button,
+  TextField,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import { useCurrentUser } from "../contexts/CurrentUser"; // Import the hook
 
-import "stream-chat-react/dist/css/v2/index.css";
+const SERVER_URL = "http://localhost:5000";
 
-const userId = "cool-shape-2";
-const userName = "cool";
+// interface Message {
+//   id: string;
+//   text: string;
+//   sender: string; // This will be the username
+// }
 
-const user: User = {
-  id: userId,
-  name: userName,
-  image: `https://getstream.io/random_png/?id=${userId}&name=${userName}`,
+const ChatWindow: React.FC = () => {
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<Array<{ id: string; text: string; sender: string }>>([]);
+  let { currentUser } = useCurrentUser();
+  
+ if (!currentUser) {
+   currentUser = { name: "Guest", email: "", id: 0 };
+ } 
+ 
+
+  useEffect(() => {
+    const newSocket = io(SERVER_URL);
+    setSocket(newSocket);
+
+    const handleNewMessage = (msg: any) => {
+      setMessages((prevMessages) => [...prevMessages, msg]);
+    };
+
+    newSocket.on("chat message", handleNewMessage);
+
+    // The cleanup function to return must explicitly return `void`.
+    return () => {
+      newSocket.off("chat message", handleNewMessage);
+      newSocket.close();
+    };
+  }, []);
+
+  const handleSendMessage = () => {
+    
+    if (message) {
+      console.log("poop")
+      const newMessage = {
+        id: Date.now().toString(),
+        text: message,
+        sender: "bleh", // or username, depending on your user object
+      };
+      console.log("boop")
+      socket?.emit("chat message", newMessage);
+      setMessage("");
+      setMessages((prevMessages) => [...prevMessages, newMessage]); // optimistically update UI
+      console.log("Sent message:", newMessage);
+    }
+  };
+
+  return (
+    <Box sx={{ maxWidth: 400, margin: "0 auto", p: 2 }}>
+      <Typography variant="h4" gutterBottom>
+        Chat Room
+      </Typography>
+      <List>
+        {messages.map((msg) => (
+          <ListItem key={msg.id}>
+            <ListItemText primary={`${msg.sender}: ${msg.text}`} />
+          </ListItem>
+        ))}
+      </List>
+      <Box
+        component="form"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          "& > :not(style)": { m: 1 },
+        }}
+        noValidate
+        autoComplete="off"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSendMessage();
+        }}
+      >
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="Type your message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+        />
+        <Button variant="contained" color="primary" type="submit">
+          Send
+        </Button>
+      </Box>
+    </Box>
+  );
 };
 
-const apiKey = "dz5f4d5kzrue";
-const userToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiY29vbC1zaGFwZS0yIiwiZXhwIjoxNzEzNDI0ODY0fQ.z0BfiHrScrGRd8cht0jWSBA8klsxf0JuTVCfuyKXZ4o";
-
-const chatClient = new StreamChat(apiKey);
-chatClient.connectUser(user, userToken);
-
-const channel = chatClient.channel("messaging", "custom_channel_id", {
-  // add as many custom fields as you'd like
-  image: "https://www.drupal.org/files/project-images/react.png",
-  name: "Talk about React",
-  members: [userId],
-});
-
-const App = () => (
-  <Chat client={chatClient} theme="str-chat__theme-light">
-    <Channel channel={channel}>
-      <Window>
-        <ChannelHeader />
-        <MessageList />
-        <MessageInput />
-      </Window>
-      <Thread />
-    </Channel>
-  </Chat>
-);
-
-export default App;
+export default ChatWindow;

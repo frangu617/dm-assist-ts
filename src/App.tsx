@@ -35,7 +35,7 @@ import Alignment from "./components/reference_guide/Alignment";
 import LoginPage from "./components/users/LogIn";
 import LogoutPage from "./components/users/LogOut";
 import SignUpForm from "./components/users/SignUpForm";
-// import Chat from "./components/users/Message";
+
 
 // import {jwtDecode} from "jwt-decode";
 

@@ -1,10 +1,11 @@
 // Core Dependencies
 const express = require("express");
+const http = require("http"); // Required to create an HTTP server for socket.io
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 require("dotenv").config();
-const socketIO = require("socket.io");
+const socketIo = require("socket.io"); // Include socket.io
 
 // Routers
 const characterRoutes = require("./controllers/characterController");
@@ -13,18 +14,19 @@ const authRoutes = require("./controllers/authentication");
 const messageRoutes = require("./controllers/messagesController");
 
 // Middleware
-const {defineCurrentUser} = require("./middleware/defineCurrentUser");
+const { defineCurrentUser } = require("./middleware/defineCurrentUser");
 
 // Constants
 const app = express();
-const server = app.listen(3000)
-const io = socketIO(server);
-
-io.on("connection", (socket) => {
-  socket.on("message", (message) => {
-    io.emit("message", message);
-  });
+const server = http.createServer(app); // Create an HTTP server instance
+const io = socketIo(server, {
+  // Initialize socket.io with the server instance
+  cors: {
+    origin: "*", // Specify which domains are allowed to connect, adjust as necessary
+    methods: ["GET", "POST"],
+  },
 });
+
 const port = process.env.PORT || 5000;
 
 // Database Connection
@@ -40,16 +42,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(defineCurrentUser);
 
-// Socket.io for real-time communication
+// Socket.io connection handler
 io.on("connection", (socket) => {
-  console.log('A user connected', socket.id);
+  console.log("A user connected", socket.id);
 
-  socket.on("disconnect", () => {
-    console.log('User disconnected', socket.id);
+  // Example of handling a chat message
+  socket.on("chat message", (msg) => {
+    console.log("Message received: ", msg);
+    io.emit("chat message", msg); // Broadcast the message to all connected clients
   });
 
-  socket.on("send_message", (data) => {
-    socket.broadcast.emit("receive_message", data);
+  socket.on("disconnect", () => {
+    console.log("User disconnected", socket.id);
   });
 });
 
@@ -68,7 +72,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// Start the Server
-app.listen(port, () => {
+// Start the Server with the HTTP server, not the Express app
+server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

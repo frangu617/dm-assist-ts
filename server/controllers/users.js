@@ -45,4 +45,15 @@ router.get("/", requiredRoles("admin"), async (req, res) => {
   }
 });
 
+router.get("/current", defineCurrentUser, async (req, res) => {
+  // Assuming `defineCurrentUser` middleware correctly attaches the user to `req.currentUser`
+  if (!req.currentUser) {
+    return res.status(401).json({ error: "Unauthorized: No current user" });
+  }
+
+  // Depending on how you want to handle the response, you may choose to omit certain fields
+  const { password, ...userData } = req.currentUser.toObject();
+  res.json(userData);
+});
+
 module.exports = router;

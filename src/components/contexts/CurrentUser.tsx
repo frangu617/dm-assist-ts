@@ -27,24 +27,23 @@ interface CurrentUserProviderProps {
 function CurrentUserProvider({ children }: CurrentUserProviderProps) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const getLoggedInUser = async () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const response = await fetch(
-          "http://localhost:5000/authentication/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const user: User = await response.json();
-        setCurrentUser(user);
-      }
-    };
-    getLoggedInUser();
-  }, []);
+ useEffect(() => {
+   const token = localStorage.getItem("token");
+   if (token) {
+     fetch("http://localhost:5000/users/current", {
+       // Adjust this URL to match your server routes
+       headers: {
+         Authorization: `Bearer ${token}`,
+       },
+     })
+       .then((response) => {
+         if (!response.ok) throw new Error("Failed to fetch user");
+         return response.json();
+       })
+       .then((user) => setCurrentUser(user))
+       .catch((error) => console.error("Error fetching current user:", error));
+   }
+ }, []);
 
   return (
     <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
