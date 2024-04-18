@@ -14,14 +14,18 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
+    "@types/jwt-decode": "^3.1.0",
     "@types/node": "^20.12.7",
     "axios": "^1.6.8",
     "dompurify": "^3.0.11",
+    "jwt-decode": "^4.0.0",
     "marked": "^12.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "stream-chat": "^8.26.0",
+    "stream-chat-react": "^11.15.0"
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.5",

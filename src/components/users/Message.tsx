@@ -1,72 +1,50 @@
-import React, { useState, useEffect } from "react";
-const apiUrl = import.meta.env.VITE_APP_URL // Define your API URL correctly
+import { StreamChat, User } from "stream-chat";
+import {
+  Chat,
+  Channel,
+  ChannelHeader,
+  MessageInput,
+  MessageList,
+  Thread,
+  Window,
+} from "stream-chat-react";
 
-interface Message {
-  _id: string;
-  from: string;
-  message: string;
-}
+import "stream-chat-react/dist/css/v2/index.css";
 
-interface ChatProps {
-  username: string;
-  currentUserId: string;
-}
+const userId = "cool-shape-2";
+const userName = "cool";
 
-const Chat: React.FC<ChatProps> = ({ username, currentUserId }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [message, setMessage] = useState("");
-
-  const fetchMessages = async () => {
-    const response = await fetch(`${apiUrl}/messages/${username}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    if (response.ok) {
-      const data = (await response.json()) as Message[];
-      setMessages(data);
-    }
-  };
-
-  useEffect(() => {
-    fetchMessages();
-  }, [username]);
-
-  const sendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await fetch(`${apiUrl}/send`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        from: currentUserId,
-        toUsername: username,
-        message,
-      }),
-    });
-    setMessage("");
-    fetchMessages();
-  };
-
-  return (
-    <div>
-      <ul>
-        {messages.map((msg) => (
-          <li key={msg._id}>
-            {msg.from === currentUserId ? "Me" : username}: {msg.message}
-          </li>
-        ))}
-      </ul>
-      <form onSubmit={sendMessage}>
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button type="submit">Send</button>
-      </form>
-    </div>
-  );
+const user: User = {
+  id: userId,
+  name: userName,
+  image: `https://getstream.io/random_png/?id=${userId}&name=${userName}`,
 };
 
-export default Chat;
+const apiKey = "dz5f4d5kzrue";
+const userToken =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiY29vbC1zaGFwZS0yIiwiZXhwIjoxNzEzNDI0ODY0fQ.z0BfiHrScrGRd8cht0jWSBA8klsxf0JuTVCfuyKXZ4o";
+
+const chatClient = new StreamChat(apiKey);
+chatClient.connectUser(user, userToken);
+
+const channel = chatClient.channel("messaging", "custom_channel_id", {
+  // add as many custom fields as you'd like
+  image: "https://www.drupal.org/files/project-images/react.png",
+  name: "Talk about React",
+  members: [userId],
+});
+
+const App = () => (
+  <Chat client={chatClient} theme="str-chat__theme-light">
+    <Channel channel={channel}>
+      <Window>
+        <ChannelHeader />
+        <MessageList />
+        <MessageInput />
+      </Window>
+      <Thread />
+    </Channel>
+  </Chat>
+);
+
+export default App;

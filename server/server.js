@@ -3,8 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const http = require("http");
 require("dotenv").config();
+const socketIO = require("socket.io");
 
 // Routers
 const characterRoutes = require("./controllers/characterController");
@@ -17,14 +17,14 @@ const {defineCurrentUser} = require("./middleware/defineCurrentUser");
 
 // Constants
 const app = express();
-const server = http.createServer(app);
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
+const server = app.listen(3000)
+const io = socketIO(server);
 
-})
+io.on("connection", (socket) => {
+  socket.on("message", (message) => {
+    io.emit("message", message);
+  });
+});
 const port = process.env.PORT || 5000;
 
 // Database Connection

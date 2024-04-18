@@ -53,8 +53,6 @@ export default function CharacterCreator() {
 
   const apiUrl = import.meta.env.VITE_APP_URL;
 
-  console.log(apiUrl);
-
   const handleCharacterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem("token");

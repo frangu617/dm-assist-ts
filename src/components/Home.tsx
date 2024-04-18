@@ -3,6 +3,7 @@ import { Typography, Button, Card, CardContent, Grid } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import oldTimeyTheme from "./themes/oldTimey";
+import Chat from "./users/Message";
 //Trying to finalize this
 export default function Home() {
     return (
@@ -28,6 +29,13 @@ export default function Home() {
                     <NavLink to="/dice"><Button variant="contained">Roll Some dice</Button></NavLink>
                 </Grid>
             </Grid>
+            <Card style={{ marginTop: 20 }}>
+                <CardContent>
+                    <Typography variant="h6">
+                        <Chat />
+                    </Typography>
+                </CardContent>
+            </Card>
         </div>
     );
 }
