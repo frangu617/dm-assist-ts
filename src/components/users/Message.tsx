@@ -23,13 +23,14 @@ const SERVER_URL = "http://localhost:5000";
 const ChatWindow: React.FC = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<Array<{ id: string; text: string; sender: string }>>([]);
+  const [messages, setMessages] = useState<
+    Array<{ id: string; text: string; sender: string }>
+  >([]);
   let { currentUser } = useCurrentUser();
-  
- if (!currentUser) {
-   currentUser = { name: "Guest", email: "", id: 0 };
- } 
- 
+
+  if (!currentUser) {
+    currentUser = { name: "Guest", email: "", id: 0 };
+  }
 
   useEffect(() => {
     const newSocket = io(SERVER_URL);
@@ -49,18 +50,17 @@ const ChatWindow: React.FC = () => {
   }, []);
 
   const handleSendMessage = () => {
-    
-    if (message) {
-      console.log("poop")
+    if (message && currentUser) {
+      // Check if there's a message and if currentUser is not null
+      console.log("Sending message");
       const newMessage = {
-        id: Date.now().toString(),
+        id: Date.now().toString(), // Use a proper unique ID generation method
         text: message,
-        sender: "bleh", // or username, depending on your user object
+        sender: currentUser.name, // Use the current user's name
       };
-      console.log("boop")
       socket?.emit("chat message", newMessage);
       setMessage("");
-      setMessages((prevMessages) => [...prevMessages, newMessage]); // optimistically update UI
+      setMessages((prevMessages) => [...prevMessages, newMessage]); // Optimistically update UI
       console.log("Sent message:", newMessage);
     }
   };

@@ -35,6 +35,7 @@ import Alignment from "./components/reference_guide/Alignment";
 import LoginPage from "./components/users/LogIn";
 import LogoutPage from "./components/users/LogOut";
 import SignUpForm from "./components/users/SignUpForm";
+import { CurrentUserProvider } from "./components/contexts/CurrentUser";
 
 
 // import {jwtDecode} from "jwt-decode";
@@ -75,6 +76,7 @@ const handleLoginSuccess = (username: string, token: string) => {
   // };
 
   return (
+  <CurrentUserProvider>
     <ThemeProvider theme={customTheme}>
       <CssBaseline />
       <Router>
@@ -251,6 +253,7 @@ const handleLoginSuccess = (username: string, token: string) => {
         </Container>
       </Router>
     </ThemeProvider>
+  </CurrentUserProvider>
   );
 }
 
