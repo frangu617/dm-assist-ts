@@ -23,9 +23,7 @@ const SERVER_URL = "http://localhost:5000";
 const ChatWindow: React.FC = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<
-    Array<{ id: string; text: string; sender: string }>
-  >([]);
+  const [messages, setMessages] = useState< Array<{ id: string; text: string; sender: string }> > ([]);
   let { currentUser } = useCurrentUser();
 
   if (!currentUser) {
@@ -37,7 +35,10 @@ const ChatWindow: React.FC = () => {
     setSocket(newSocket);
 
     const handleNewMessage = (msg: any) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
+      if(msg.sender !== currentUser.username) {
+        setMessages((prevMessages) => [...prevMessages, msg]);
+      }
+      
     };
 
     newSocket.on("chat message", handleNewMessage);
@@ -51,9 +52,7 @@ const ChatWindow: React.FC = () => {
 
   const handleSendMessage = () => {
     if (message && currentUser) {
-      // Check if there's a message and if currentUser is not null
-
-      
+      // Check if there's a message and if currentUser is not null      
       const newMessage = {
         id: Date.now().toString(), // Use a proper unique ID generation method
         text: message,
@@ -62,7 +61,6 @@ const ChatWindow: React.FC = () => {
       socket?.emit("chat message", newMessage);
       setMessage("");
       setMessages((prevMessages) => [...prevMessages, newMessage]); // Optimistically update UI
-      console.log("Sent message:", newMessage);
     }
   };
 
