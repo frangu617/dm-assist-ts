@@ -31,7 +31,6 @@ export default function Home() {
                     <NavLink to="/dice"><Button variant="contained">Roll Some dice</Button></NavLink>
                 </Grid>
             </Grid>
-            
             <ChatWindow />
             
         </div>

@@ -9,16 +9,11 @@ import {
   List,
   ListItem,
   ListItemText,
+  Card,
 } from "@mui/material";
 import { useCurrentUser } from "../contexts/CurrentUser"; // Import the hook
 
 const SERVER_URL = "http://localhost:5000";
-
-// interface Message {
-//   id: string;
-//   text: string;
-//   sender: string; // This will be the username
-// }
 
 const ChatWindow: React.FC = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -35,11 +30,8 @@ const ChatWindow: React.FC = () => {
     setSocket(newSocket);
 
     const handleNewMessage = (msg: any) => {
-      if(msg.sender !== currentUser.username) {
-        setMessages((prevMessages) => [...prevMessages, msg]);
-      }
-      
-    };
+        setMessages((prevMessages) => [...prevMessages, msg]); 
+      };
 
     newSocket.on("chat message", handleNewMessage);
 
@@ -60,7 +52,6 @@ const ChatWindow: React.FC = () => {
       };
       socket?.emit("chat message", newMessage);
       setMessage("");
-      setMessages((prevMessages) => [...prevMessages, newMessage]); // Optimistically update UI
     }
   };
 
@@ -69,6 +60,7 @@ const ChatWindow: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Chat Room
       </Typography>
+      <Card sx={{ height: 300, overflow: "auto"}}>
       <List>
         {messages.map((msg) => (
           <ListItem key={msg.id}>
@@ -76,6 +68,7 @@ const ChatWindow: React.FC = () => {
           </ListItem>
         ))}
       </List>
+    </Card>
       <Box
         component="form"
         sx={{
