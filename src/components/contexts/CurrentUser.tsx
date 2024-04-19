@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect, ReactNode, useContext } from
 // Define the type for the user. Adjust fields according to your user object structure.
 interface User {
   id: number;
-  name: string;
+  username: string;
   email: string;
   // Add other user fields as needed
 }
@@ -45,6 +45,7 @@ function CurrentUserProvider({ children }: CurrentUserProviderProps) {
    }
  }, []);
 
+ console.log(currentUser);
   return (
     <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
       {children}

@@ -29,7 +29,7 @@ const ChatWindow: React.FC = () => {
   let { currentUser } = useCurrentUser();
 
   if (!currentUser) {
-    currentUser = { name: "Guest", email: "", id: 0 };
+    currentUser = { username: "Guest", email: "", id: 0 };
   }
 
   useEffect(() => {
@@ -52,11 +52,12 @@ const ChatWindow: React.FC = () => {
   const handleSendMessage = () => {
     if (message && currentUser) {
       // Check if there's a message and if currentUser is not null
-      console.log("Sending message");
+
+      
       const newMessage = {
         id: Date.now().toString(), // Use a proper unique ID generation method
         text: message,
-        sender: currentUser.name, // Use the current user's name
+        sender: currentUser.username, // Use the current user's name
       };
       socket?.emit("chat message", newMessage);
       setMessage("");
