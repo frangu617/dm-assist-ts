@@ -13,7 +13,6 @@ import {
   Container,
 } from "@mui/material";
 import { useCurrentUser } from "../contexts/CurrentUser"; // Import the hook
-import BackgroundSelector from "../characters/BackgroundSelector";
 
 const SERVER_URL = "http://localhost:5000";
 
@@ -59,12 +58,12 @@ const ChatWindow: React.FC = () => {
 
   return (
     <Container sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Card sx={{ width: "80%", p: 2, boxShadow: 8, backgroundColor: "lightgrey" }}>
+      <Card sx={{ width: "80%", p: 2, boxShadow: 8, backgroundColor: "lightgrey", borderRadius: "20px" }}>
     <Box sx={{  margin: "0 auto", p: 2 }}>
       <Typography variant="h4" gutterBottom>
-        Chat Room
+        Lets Talk!
       </Typography>
-      <Card sx={{ height: "100%", p: 2, display: "flex", flexDirection: "column",  overflow: "auto", boxShadow: 8 }}>
+      <Card sx={{ height: "100%", p: 2, display: "flex", flexDirection: "column",  overflow: "auto", boxShadow: 8, borderRadius: "30px" }}>
       <List>
         {messages.map((msg) => (
           <ListItem key={msg.id}>
@@ -79,6 +78,7 @@ const ChatWindow: React.FC = () => {
           display: "flex",
           alignItems: "center",
           "& > :not(style)": { m: 1 },
+          borderRadius: "20px",
         }}
         noValidate
         autoComplete="off"

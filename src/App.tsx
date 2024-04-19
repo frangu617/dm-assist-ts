@@ -1,22 +1,17 @@
-import { useState } from "react";
+
 import {
   BrowserRouter as Router,
   Route,
   NavLink,
   Routes,
-  // useNavigate,
 } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
-  Menu,
-  MenuItem,
   Typography,
   Container,
-  Button,
-  IconButton,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+
 // import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import customTheme from "./components/themes/customTheme";
 // import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
@@ -35,17 +30,13 @@ import Alignment from "./components/reference_guide/Alignment";
 import LoginPage from "./components/users/LogIn";
 import LogoutPage from "./components/users/LogOut";
 import SignUpForm from "./components/users/SignUpForm";
-import { CurrentUserProvider } from "./components/contexts/CurrentUser";
+import { CurrentUserProvider} from "./components/contexts/CurrentUser";
+import Navigation from "./components/Navigation";
 
 
 // import {jwtDecode} from "jwt-decode";
 
-function App() {
-  const [username, setUsername] = useState<string | null>(null);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  // const [chatVisible, setChatVisible] = useState<boolean>(false);
-  // const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  // const [chatUsername, setChatUsername] = useState<string | null>(null); // Username to chat with
+function App() {  
 
 const handleLoginSuccess = (username: string, token: string) => {
   localStorage.setItem("token", token);
@@ -54,26 +45,8 @@ const handleLoginSuccess = (username: string, token: string) => {
   // setCurrentUserId(username);
 };
 
- const handleLogout = () => {
-   localStorage.removeItem("token");
-   setUsername(null);
-  //  setCurrentUserId(null);
-  //  setChatVisible(false);
- };
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  // const toggleChat = () => {
-  //   setChatVisible(!chatVisible);
-  //   // Set this to a default or selected user to start chat with
-  //   setChatUsername("otherUserUsername"); // This should be set dynamically based on user selection
-  // };
 
   return (
   <CurrentUserProvider>
@@ -81,95 +54,7 @@ const handleLoginSuccess = (username: string, token: string) => {
       <CssBaseline />
       <Router>
         <AppBar position="static" style={{ marginBottom: "20px" }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              onClick={handleMenuOpen}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="main-menu"
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-              keepMounted
-            >
-              <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/create"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Character Creator
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/manager"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Character Manager
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/dice"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Dice Roller
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/initiative-tracker"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Initiative Tracker
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/music-search"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Music Search
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/monster-search"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Monster Search
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/races-search"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Races Search
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/rules-search"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Rules Search
-                </NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/classes"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  Classes
-                </NavLink>
-              </MenuItem>
-            </Menu>
+          <Toolbar>           
             <Typography
               variant="h6"
               style={{ flexGrow: 1, marginLeft: "20px" }}
@@ -181,38 +66,7 @@ const handleLoginSuccess = (username: string, token: string) => {
                 🐉 DM Assist 🐉
               </NavLink>
             </Typography>
-            {username ? (
-              <>
-                <Typography variant="h6" style={{ margin: "0 12px" }}>
-                  Welcome, {username}!
-                </Typography>
-                {/* <IconButton color="inherit" onClick={toggleChat}>
-                  <ChatBubbleIcon />
-                </IconButton> */}
-                <Button color="inherit" onClick={handleLogout}>
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button color="inherit">
-                  <NavLink
-                    to="/login"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Login
-                  </NavLink>
-                </Button>
-                <Button color="inherit">
-                  <NavLink
-                    to="/signup"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Sign Up
-                  </NavLink>
-                </Button>
-              </>
-            )}
+            <Navigation />
           </Toolbar>
         </AppBar>
         <Container>
@@ -247,9 +101,6 @@ const handleLoginSuccess = (username: string, token: string) => {
             <Route path="/alignment" element={<Alignment />} />
             <Route path="/classes" element={<DnDClasses />} />
           </Routes>
-          {/* {chatVisible && currentUserId && chatUsername && (
-            <Chat username={chatUsername} currentUserId={currentUserId} />
-          )} */}
         </Container>
       </Router>
     </ThemeProvider>

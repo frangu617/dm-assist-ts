@@ -20,17 +20,7 @@ export default function Home() {
                     </ThemeProvider>
                 </CardContent>
             </Card>
-            <Grid container justifyContent="center">
-                <Grid item xs={6} sm={4} lg={3} >
-                    <NavLink to="/create"><Button variant="contained">Create character</Button></NavLink>
-                </Grid>
-                <Grid item xs={6} sm={4} lg={3} >
-                    <NavLink to="/manager"><Button variant="contained">Manage characters</Button></NavLink>
-                </Grid>
-                <Grid item xs={6} sm={4} lg={3} >
-                    <NavLink to="/dice"><Button variant="contained">Roll Some dice</Button></NavLink>
-                </Grid>
-            </Grid>
+           
             <ChatWindow />
             
         </div>
