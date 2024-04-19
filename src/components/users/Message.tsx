@@ -10,8 +10,10 @@ import {
   ListItem,
   ListItemText,
   Card,
+  Container,
 } from "@mui/material";
 import { useCurrentUser } from "../contexts/CurrentUser"; // Import the hook
+import BackgroundSelector from "../characters/BackgroundSelector";
 
 const SERVER_URL = "http://localhost:5000";
 
@@ -56,15 +58,17 @@ const ChatWindow: React.FC = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 400, margin: "0 auto", p: 2 }}>
+    <Container sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Card sx={{ width: "80%", p: 2, boxShadow: 8, backgroundColor: "lightgrey" }}>
+    <Box sx={{  margin: "0 auto", p: 2 }}>
       <Typography variant="h4" gutterBottom>
         Chat Room
       </Typography>
-      <Card sx={{ height: 300, overflow: "auto"}}>
+      <Card sx={{ height: "100%", p: 2, display: "flex", flexDirection: "column",  overflow: "auto", boxShadow: 8 }}>
       <List>
         {messages.map((msg) => (
           <ListItem key={msg.id}>
-            <ListItemText primary={`${msg.sender}: ${msg.text}`} />
+            <ListItemText primary={`${msg.sender}: `} secondary={`${msg.text}`}/> {/*<ListItemText sx={{ textAlign: "left" }} primary={` ${msg.text}`} />*/}
           </ListItem>
         ))}
       </List>
@@ -83,7 +87,10 @@ const ChatWindow: React.FC = () => {
           handleSendMessage();
         }}
       >
+        
+        <p style ={{ margin: "0 auto", textAlign: "center", fontWeight: "bold", fontSize: "25px" }}>{currentUser.username}</p>
         <TextField
+        sx={{ width: "90%", margin: "0 5%", backgroundColor: "white" }}
           fullWidth
           variant="outlined"
           label="Type your message"
@@ -91,11 +98,14 @@ const ChatWindow: React.FC = () => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
         />
-        <Button variant="contained" color="primary" type="submit">
+        <Button variant="contained" color="primary" type="submit" sx={{ mt: 2 }}>
           Send
         </Button>
+        
       </Box>
     </Box>
+    </Card>
+    </Container>
   );
 };
 
