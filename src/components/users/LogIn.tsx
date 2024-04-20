@@ -48,6 +48,7 @@ function LoginPage({ onLoginSuccess }: LoginPageProps) {
       const result = await loginUser({ username, password });
       onLoginSuccess(result.username, result.token);
       navigate("/");
+      window.location.href = "/";
     } catch (error) {
       console.error("Login failed:", error);
       setError((error as Error).message || "An error occurred during login.");

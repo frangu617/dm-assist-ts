@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 const oldTimeyTheme = createTheme({
   typography: {
-    fontFamily: "'Caudex', serif",
+    fontFamily: "'Caudex', sans-serif",
     h1: {
       // Customize your headers as needed
       fontSize: '2rem',

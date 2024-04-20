@@ -26,6 +26,7 @@ import LogoutPage from "./components/users/LogOut";
 import SignUpForm from "./components/users/SignUpForm";
 import { CurrentUserProvider } from "./components/contexts/CurrentUser";
 import Navigation from "./components/Navigation";
+import ChatWindow from "./components/users/Message";
 
 // import {jwtDecode} from "jwt-decode";
 
@@ -92,6 +93,7 @@ function App() {
               <Route path="/classes" element={<DnDClasses />} />
             </Routes>
           </Container>
+          <ChatWindow />
         </Router>
       </ThemeProvider>
     </CurrentUserProvider>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useCurrentUser } from "./contexts/CurrentUser"; // Adjust the import path as necessary
 import {
@@ -13,19 +13,19 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
 const Navigation: React.FC = () => {
   const { currentUser } = useCurrentUser();
-  const [username, setUsername] = useState<string | null>(null);
+  // const [username, setUsername] = useState<string | null>(null);
   const [anchorElCharacter, setAnchorElCharacter] =
     useState<null | HTMLElement>(null);
   const [anchorElTools, setAnchorElTools] = useState<null | HTMLElement>(null);
   const [anchorElReference, setAnchorElReference] =
     useState<null | HTMLElement>(null);
 
-  const handleLoginSuccess = (username: string, token: string) => {
-    localStorage.setItem("token", token);
-    setUsername(username);
-    // const decoded = jwtDecode(token); // Assuming your JWT contains the user ID
-    // setCurrentUserId(username);
-  };
+  // const handleLoginSuccess = (username: string, token: string) => {
+  //   localStorage.setItem("token", token);
+  //   setUsername(username);
+  //   // const decoded = jwtDecode(token); // Assuming your JWT contains the user ID
+  //   // setCurrentUserId(username);
+  // };
 
   const handleOpenMenu = (
     event: React.MouseEvent<HTMLElement>,

@@ -14,8 +14,9 @@ const customTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Georgia, sans-serif',
   },
+  
   components: {
     MuiListItem: {
       styleOverrides: {

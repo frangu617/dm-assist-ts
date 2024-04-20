@@ -1,9 +1,7 @@
 // import React from "react";
-import { Typography, Button, Card, CardContent, Grid } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Typography, Card, CardContent } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import oldTimeyTheme from "./themes/oldTimey";
-import ChatWindow from "./users/Message";
 import { CurrentUserProvider } from "./contexts/CurrentUser";
 //Trying to finalize this
 export default function Home() {
@@ -19,10 +17,7 @@ export default function Home() {
                         </Typography>
                     </ThemeProvider>
                 </CardContent>
-            </Card>
-           
-            <ChatWindow />
-            
+            </Card>            
         </div>
         </CurrentUserProvider>
     );

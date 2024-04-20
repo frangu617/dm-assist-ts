@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Socket } from "socket.io-client";
 import io from "socket.io-client";
 import {
@@ -10,17 +10,22 @@ import {
   ListItem,
   ListItemText,
   Card,
-  Container,
 } from "@mui/material";
-import { useCurrentUser } from "../contexts/CurrentUser"; // Import the hook
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; // for the toggle icon
+import { useCurrentUser } from "../contexts/CurrentUser";
+import { ChatBubble } from "@mui/icons-material";
 
-
-const SERVER_URL = "http://localhost:5000";
+const SERVER_URL = import.meta.env.VITE_APP_URL;
 
 const ChatWindow: React.FC = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState< Array<{ id: string; text: string; sender: string }> > ([]);
+  const [messages, setMessages] = useState<
+    Array<{ id: string; text: string; sender: string }>
+  >([]);
+  const [isOpen, setIsOpen] = useState(false); // state to handle visibility
+  const messagesEndRef = useRef<null | HTMLDivElement>(null); // ref for auto-scrolling
+
   let { currentUser } = useCurrentUser();
 
   if (!currentUser) {
@@ -30,27 +35,26 @@ const ChatWindow: React.FC = () => {
   useEffect(() => {
     const newSocket = io(SERVER_URL);
     setSocket(newSocket);
-
-    const handleNewMessage = (msg: any) => {
-        setMessages((prevMessages) => [...prevMessages, msg]); 
-      };
-
-    newSocket.on("chat message", handleNewMessage);
-
-    // The cleanup function to return must explicitly return `void`.
+    newSocket.on("chat message", (msg: any) => {
+      setMessages((prevMessages) => [...prevMessages, msg]);
+    });
     return () => {
-      newSocket.off("chat message", handleNewMessage);
+      newSocket.off("chat message");
       newSocket.close();
     };
   }, []);
 
-  const handleSendMessage = () => {
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (message && currentUser) {
-      // Check if there's a message and if currentUser is not null      
       const newMessage = {
-        id: Date.now().toString(), // Use a proper unique ID generation method
+        id: Date.now().toString(),
         text: message,
-        sender: currentUser.username, // Use the current user's name
+        sender: currentUser.username,
       };
       socket?.emit("chat message", newMessage);
       setMessage("");
@@ -58,55 +62,86 @@ const ChatWindow: React.FC = () => {
   };
 
   return (
-    <Container sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Card sx={{ width: "80%", p: 2, boxShadow: 8, backgroundColor: "lightgrey", borderRadius: "20px" }}>
-    <Box sx={{  margin: "0 auto", p: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        Lets Talk!
-      </Typography>
-      <Card sx={{ maxHeight: "50vh", p: 2, display: "flex", flexDirection: "column",  overflow: "auto", boxShadow: 8, borderRadius: "30px" }}>
-      <List>
-        {messages.map((msg) => (
-          <ListItem key={msg.id}>
-            <ListItemText primary={`${msg.sender}: `} secondary={`${msg.text}`}/> {/*<ListItemText sx={{ textAlign: "left" }} primary={` ${msg.text}`} />*/}
-          </ListItem>
-        ))}
-      </List>
-    </Card>
-      <Box
-        component="form"
+    <Box
+      sx={{
+        position: "fixed",
+        bottom: 0,
+        right: 0,
+        width: 300,
+        transform: isOpen ? "translateX(0)" : "translateX(100%)",
+        transition: "transform 0.3s ease-in-out",
+        bgcolor: `primary.main`,
+        borderRadius: "20px",
+        zIndex: 1000,
+      }}
+    >
+      <ChatBubble
+        onClick={() => setIsOpen(!isOpen)}
         sx={{
-          display: "flex",
-          alignItems: "center",
-          "& > :not(style)": { m: 1 },
-          borderRadius: "20px",
-        }}
-        noValidate
-        autoComplete="off"
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSendMessage();
+          position: "absolute",
+          top: 0,
+          left: -40,
+          color: 'primary.main',
         }}
       >
-        
-        <p style ={{ margin: "0 auto", textAlign: "center", fontWeight: "bold", fontSize: "25px" }}>{currentUser.username}</p>
-        <TextField
-        sx={{ width: "90%", margin: "0 5%", backgroundColor: "white" }}
-          fullWidth
-          variant="outlined"
-          label="Type your message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-        />
-        <Button variant="contained" color="primary" type="submit" sx={{ mt: 2 }}>
-          Send
-        </Button>
-        
-      </Box>
+        <ExpandMoreIcon />
+      </ChatBubble>
+
+      <Typography
+        variant="h6"
+        sx={{
+          p: 2,
+          textAlign: "center",
+          color: 'primary.contrastText',
+        }}
+      >
+        Chat
+      </Typography>
+      <Typography>
+        <List sx={{ maxHeight: 200, overflow: "auto" }}>
+          {/* <ListSubheader>Chat History</ListSubheader> */}
+          <Card
+            sx={{
+              width: "90%",
+              p: 2,
+              marginLeft: "auto",
+              marginRight: "auto",
+              textAlign: "left",
+              borderRadius: "20px",
+            }}
+          >
+            {messages.map((msg) => (
+              <ListItem key={msg.id}>
+                <ListItemText
+                  primary={`${msg.sender}: `}
+                  secondary={` ${msg.text}`}
+                />
+              </ListItem>
+            ))}
+            <div ref={messagesEndRef} />
+          </Card>
+        </List>
+
+        <Box
+          component="form"
+          onSubmit={handleSendMessage}
+          sx={{ display: "flex", p: 1 }}
+        >
+          <TextField
+            sx={{ flexGrow: 1, backgroundColor: "background.default" }}
+            fullWidth
+            variant="outlined"
+            label="Type your message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            size="small"
+          />
+          <Button type="submit" color="secondary" variant="contained">
+            Send
+          </Button>
+        </Box>
+      </Typography>
     </Box>
-    </Card>
-    </Container>
   );
 };
 
