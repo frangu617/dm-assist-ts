@@ -1,16 +1,10 @@
-
 import {
   BrowserRouter as Router,
   Route,
   NavLink,
   Routes,
 } from "react-router-dom";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Container,
-} from "@mui/material";
+import { AppBar, Toolbar, Typography, Container } from "@mui/material";
 
 // import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import customTheme from "./components/themes/customTheme";
@@ -30,81 +24,77 @@ import Alignment from "./components/reference_guide/Alignment";
 import LoginPage from "./components/users/LogIn";
 import LogoutPage from "./components/users/LogOut";
 import SignUpForm from "./components/users/SignUpForm";
-import { CurrentUserProvider} from "./components/contexts/CurrentUser";
+import { CurrentUserProvider } from "./components/contexts/CurrentUser";
 import Navigation from "./components/Navigation";
-
 
 // import {jwtDecode} from "jwt-decode";
 
-function App() {  
-
-const handleLoginSuccess = (username: string, token: string) => {
-  localStorage.setItem("token", token);
-  setUsername(username);
-  // const decoded = jwtDecode(token); // Assuming your JWT contains the user ID
-  // setCurrentUserId(username);
-};
-
-
-
+function App() {
+  // const navigate = useNavigate();
+  const setUsername = (username: string) => {
+    localStorage.setItem("username", username);
+  };
+  const handleLoginSuccess = (username: string, token: string) => {
+    localStorage.setItem("token", token);
+    setUsername(username);
+    
+  };
 
   return (
-  <CurrentUserProvider>
-    <ThemeProvider theme={customTheme}>
-      <CssBaseline />
-      <Router>
-        <AppBar position="static" style={{ marginBottom: "20px" }}>
-          <Toolbar>           
-            <Typography
-              variant="h6"
-              style={{ flexGrow: 1, marginLeft: "20px" }}
-            >
-              <NavLink
-                to="/"
-                style={{ textDecoration: "none", color: "inherit" }}
+    <CurrentUserProvider>
+      <ThemeProvider theme={customTheme}>
+        <CssBaseline />
+        <Router>
+          <AppBar position="static" style={{ marginBottom: "20px" }}>
+            <Toolbar>
+              <Typography
+                variant="h6"
+                style={{ flexGrow: 1, marginLeft: "20px" }}
               >
-                🐉 DM Assist 🐉
-              </NavLink>
-            </Typography>
-            <Navigation />
-          </Toolbar>
-        </AppBar>
-        <Container>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/login"
-              element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
-            />
-            <Route
-              path="/logout"
-              element={
-                <LogoutPage
-                  onLogout={() => console.log("User logged out successfully")}
-                />
-              }
-            />
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/login"
-              element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
-            />
-            <Route path="/signup" element={<SignUpForm />} />
-            <Route path="/create" element={<CharacterCreator />} />
-            <Route path="/manager" element={<CharacterManager />} />
-            <Route path="/dice" element={<DiceRoller />} />
-            <Route path="/initiative-tracker" element={<InitiativeTracker />} />
-            <Route path="/music-search" element={<MusicSearch />} />
-            <Route path="/monster-search" element={<MonsterSearch />} />
-            <Route path="/races-search" element={<RacesSearch />} />
-            <Route path="/rules-search" element={<RulesSearch />} />
-            <Route path="/alignment" element={<Alignment />} />
-            <Route path="/classes" element={<DnDClasses />} />
-          </Routes>
-        </Container>
-      </Router>
-    </ThemeProvider>
-  </CurrentUserProvider>
+                <NavLink
+                  to="/"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  🐉 DM Assist 🐉
+                </NavLink>
+              </Typography>
+              <Navigation />
+            </Toolbar>
+          </AppBar>
+          <Container>
+            <Routes>
+              <Route
+                path="/logout"
+                element={
+                  <LogoutPage
+                    onLogout={() => console.log("User logged out successfully")}
+                  />
+                }
+              />
+              <Route path="/" element={<Home />} />
+              <Route
+                path="/login"
+                element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
+              />
+              <Route path="/signup" element={<SignUpForm />} />
+              <Route path="/create" element={<CharacterCreator />} />
+              <Route path="/manager" element={<CharacterManager />} />
+              <Route path="/dice" element={<DiceRoller />} />
+              <Route
+                path="/initiative-tracker"
+                element={<InitiativeTracker />}
+              />
+              <Route path="/music-search" element={<MusicSearch />} />
+              <Route path="/monster-search" element={<MonsterSearch />} />
+              <Route path="/races-search" element={<RacesSearch />} />
+              <Route path="/rules-search" element={<RulesSearch />} />
+              <Route path="/alignment" element={<Alignment />} />
+              <Route path="/classes" element={<DnDClasses />} />
+            </Routes>
+          </Container>
+        </Router>
+      </ThemeProvider>
+    </CurrentUserProvider>
   );
 }
 

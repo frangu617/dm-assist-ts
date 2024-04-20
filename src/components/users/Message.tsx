@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { useCurrentUser } from "../contexts/CurrentUser"; // Import the hook
 
+
 const SERVER_URL = "http://localhost:5000";
 
 const ChatWindow: React.FC = () => {
@@ -63,7 +64,7 @@ const ChatWindow: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Lets Talk!
       </Typography>
-      <Card sx={{ height: "100%", p: 2, display: "flex", flexDirection: "column",  overflow: "auto", boxShadow: 8, borderRadius: "30px" }}>
+      <Card sx={{ maxHeight: "50vh", p: 2, display: "flex", flexDirection: "column",  overflow: "auto", boxShadow: 8, borderRadius: "30px" }}>
       <List>
         {messages.map((msg) => (
           <ListItem key={msg.id}>
