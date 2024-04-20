@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode, useContext } from "react";
-
+const apiUrl = import.meta.env.VITE_APP_URL;
 // Define the type for the user. Adjust fields according to your user object structure.
 interface User {
   id: number;
@@ -30,7 +30,7 @@ function CurrentUserProvider({ children }: CurrentUserProviderProps) {
  useEffect(() => {
    const token = localStorage.getItem("token");
    if (token) {
-     fetch("http://localhost:5000/users/current", {
+     fetch(`${apiUrl}/users/current`, {
        // Adjust this URL to match your server routes
        headers: {
          Authorization: `Bearer ${token}`,
