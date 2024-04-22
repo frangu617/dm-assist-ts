@@ -1,6 +1,6 @@
 # DM Assist
 ## Milestone Project 3  
-## By Francisco Gutierrez
+### By Francisco Gutierrez
 
 ## Overview
 Dm Assist is originally an app to create and manage characters.  
