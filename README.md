@@ -34,6 +34,31 @@ Following that, there are a small number of routes:
   - /auth
   -   This route is used for authentication, which is at endpoint "/login"
 
+
+##Tech Stack
+  #### Frontend:
+    Framework: React.js
+    Styling: Emotion (React)
+    UI Library: Material-UI
+    Routing: React Router DOM
+    HTTP Client: Axios
+    Real-time Communication: Socket.io-client
+    
+  #### Backend:
+    Framework: Express.js
+    Database: MongoDB (via Mongoose)
+    Authentication: JSON Web Tokens (jsonwebtoken)
+    Password Hashing: bcrypt
+    Middleware: body-parser, cors, method-override
+    Real-time Communication: Socket.io
+  #### DevOps and Tooling:
+    Build Tool: Vite (for frontend), npm scripts (for backend)
+    Type Checking: TypeScript (for frontend)
+    Linting: ESLint with TypeScript support (for frontend)
+    Environment Variables: dotenv (for both frontend and backend)
+    Dependency Management: npm
+
+
 ## Future Plans
 This app will be grown to include things like conversations between 2 users, group making, assigning group DM  
 which will be able to manage different things within groups, and, in the very long run, it will include a  
