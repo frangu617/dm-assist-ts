@@ -35,7 +35,7 @@ Following that, there are a small number of routes:
   -   This route is used for authentication, which is at endpoint "/login"
 
 
-##Tech Stack
+## Tech Stack
   #### Frontend:
     Framework: React.js
     Styling: Emotion (React)
