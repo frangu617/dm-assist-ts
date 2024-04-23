@@ -36,6 +36,8 @@ Following that, there are a small number of routes:
 
 
 ## Tech Stack
+Please run npm install for the backend folder, separately from the client folder which is the root folder, to run this app. Once npm install completes, start the server separately from the main app. As this is a Vite app, please use npm run dev for the front end, and once you go into the backend folder, npm start, or nodemon or node server.js should work
+
   #### Frontend:
     Framework: React.js
     Styling: Emotion (React)
