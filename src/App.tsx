@@ -25,6 +25,7 @@ import { CurrentUserProvider } from "./components/contexts/CurrentUser";
 import Navigation from "./components/Navigation";
 import ChatWindow from "./components/users/Message";
 import CharacterEditor from "./components/characters/CharacterEditor";
+import { AvailableUsersProvider } from "./components/contexts/AvailableUsers";
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
 
   return (
     <CurrentUserProvider>
+      <AvailableUsersProvider>
       <ThemeProvider theme={customTheme}>
         <CssBaseline />
         <Router>
@@ -87,6 +89,7 @@ function App() {
           <ChatWindow />
         </Router>
       </ThemeProvider>
+      </AvailableUsersProvider>
     </CurrentUserProvider>
   );
 }

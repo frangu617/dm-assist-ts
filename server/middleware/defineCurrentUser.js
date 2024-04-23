@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken"); // Make sure this is 'jsonwebtoken', not 'json-web-token'
 const User = require("../models/user"); // Directly import the User model
 
+
 async function defineCurrentUser(req, res, next) {
   if (!req.headers.authorization) return next();
 

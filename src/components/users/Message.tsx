@@ -13,8 +13,8 @@ import {
   Card,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; // for the toggle icon
-import { useCurrentUser } from "../contexts/CurrentUser";
 import { ChatBubble } from "@mui/icons-material";
+import { useCurrentUser } from "../contexts/CurrentUser";
 
 const SERVER_URL = import.meta.env.VITE_APP_URL;
 
@@ -27,12 +27,7 @@ const ChatWindow: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false); // state to handle visibility
   const [unreadCount, setUnreadCount] = useState(0); // state for unread messages
   const messagesEndRef = useRef<null | HTMLDivElement>(null); // ref for auto-scrolling
-
-  let { currentUser } = useCurrentUser();
-
-  if (!currentUser) {
-    currentUser = { username: "Guest", email: "", id: 0 };
-  }
+  const { currentUser } = useCurrentUser(); // Use the currentUser context
 
   useEffect(() => {
     const newSocket = io(SERVER_URL);
@@ -71,40 +66,36 @@ const ChatWindow: React.FC = () => {
 
   return (
     <>
-      
-    <Box
-      sx={{
-        position: "fixed",
-        bottom: 0,
-        right: 0,
-        width: 300,
-        transform: isOpen ? "translateX(0)" : "translateX(100%)",
-        transition: "transform 0.3s ease-in-out",
-        bgcolor: `primary.main`,
-        borderRadius: "20px",
-        border: "5px solid black",
-        zIndex: 1000,
-      }}
-    >
-      
       <Box
-        onClick={handleToggleChat}
         sx={{
-          position: "absolute",
-          top: 0,
-          left: -60,
-          width: 100,
-          // transform: isOpen ? "translateX(0)" : "translateX(100%)",
-          // transition: "transform 0.3s ease-in-out",
+          position: "fixed",
+          bottom: 0,
+          right: 0,
+          width: 300,
+          transform: isOpen ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.3s ease-in-out",
           bgcolor: `primary.main`,
           borderRadius: "20px",
-          zIndex: 0,
+          border: "5px solid black",
+          zIndex: 1000,
         }}
       >
-        <Badge badgeContent={unreadCount} color="secondary">
-         
-        </Badge>
-       </Box>
+        <Box
+          onClick={handleToggleChat}
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: -60,
+            width: 100,
+            bgcolor: `primary.main`,
+            borderRadius: "20px",
+            zIndex: 0,
+          }}
+        >
+          <Badge badgeContent={unreadCount} color="secondary">
+            {/* Content for badge */}
+          </Badge>
+        </Box>
         <ChatBubble
           onClick={handleToggleChat}
           sx={{
@@ -116,60 +107,60 @@ const ChatWindow: React.FC = () => {
         >
           <ExpandMoreIcon />
         </ChatBubble>
-      <Typography
-        variant="h6"
-        sx={{
-          p: 2,
-          textAlign: "center",
-          color: "primary.contrastText",
-        }}
-      >
-        Chat
-      </Typography>
-      <Typography>
-        <List sx={{ height: 200, overflow: "auto" }}>
-          <Card
-            sx={{
-              width: "90%",
-              p: 2,
-              marginLeft: "auto",
-              marginRight: "auto",
-              textAlign: "left",
-              borderRadius: "20px",
-            }}
-          >
-            {messages.map((msg) => (
-              <ListItem key={msg.id}>
-                <ListItemText
-                  primary={`${msg.sender}: `}
-                  secondary={` ${msg.text}`}
-                />
-              </ListItem>
-            ))}
-            <div ref={messagesEndRef} />
-          </Card>
-        </List>
-
-        <Box
-          component="form"
-          onSubmit={handleSendMessage}
-          sx={{ display: "flex", p: 1 }}
+        <Typography
+          variant="h6"
+          sx={{
+            p: 2,
+            textAlign: "center",
+            color: "primary.contrastText",
+          }}
         >
-          <TextField
-            sx={{ flexGrow: 1, backgroundColor: "background.default" }}
-            fullWidth
-            variant="outlined"
-            label="Type your message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            size="small"
-          />
-          <Button type="submit" color="secondary" variant="contained">
-            Send
-          </Button>
-        </Box>
-      </Typography>
-    </Box>
+          Chat
+        </Typography>
+       
+          <List sx={{ height: 200, overflow: "auto" }}>
+            <Card
+              sx={{
+                width: "90%",
+                p: 2,
+                marginLeft: "auto",
+                marginRight: "auto",
+                textAlign: "left",
+                borderRadius: "20px",
+              }}
+            >
+              {messages.map((msg) => (
+                <ListItem key={msg.id}>
+                  <ListItemText
+                    primary={`${msg.sender}: `}
+                    secondary={` ${msg.text}`}
+                  />
+                </ListItem>
+              ))}
+              <div ref={messagesEndRef} />
+            </Card>
+          </List>
+
+          <Box
+            component="form"
+            onSubmit={handleSendMessage}
+            sx={{ display: "flex", p: 1 }}
+          >
+            <TextField
+              sx={{ flexGrow: 1, backgroundColor: "background.default" }}
+              fullWidth
+              variant="outlined"
+              label="Type your message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              size="small"
+            />
+            <Button type="submit" color="secondary" variant="contained">
+              Send
+            </Button>
+          </Box>
+       
+      </Box>
     </>
   );
 };

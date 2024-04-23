@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode, useContext } from "react";
+
 const apiUrl = import.meta.env.VITE_APP_URL;
 // Define the type for the user. Adjust fields according to your user object structure.
 interface User {
