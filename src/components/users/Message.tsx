@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Socket } from "socket.io-client";
 import io from "socket.io-client";
 import {
+  Badge,
   Box,
   Button,
   TextField,
@@ -24,6 +25,7 @@ const ChatWindow: React.FC = () => {
     Array<{ id: string; text: string; sender: string }>
   >([]);
   const [isOpen, setIsOpen] = useState(false); // state to handle visibility
+  const [unreadCount, setUnreadCount] = useState(0); // state for unread messages
   const messagesEndRef = useRef<null | HTMLDivElement>(null); // ref for auto-scrolling
 
   let { currentUser } = useCurrentUser();
@@ -37,6 +39,7 @@ const ChatWindow: React.FC = () => {
     setSocket(newSocket);
     newSocket.on("chat message", (msg: any) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
+      setUnreadCount((prevCount) => prevCount + 1);
     });
     return () => {
       newSocket.off("chat message");
@@ -61,7 +64,14 @@ const ChatWindow: React.FC = () => {
     }
   };
 
+  const handleToggleChat = () => {
+    setIsOpen(!isOpen);
+    setUnreadCount(0);
+  };
+
   return (
+    <>
+      
     <Box
       sx={{
         position: "fixed",
@@ -72,34 +82,52 @@ const ChatWindow: React.FC = () => {
         transition: "transform 0.3s ease-in-out",
         bgcolor: `primary.main`,
         borderRadius: "20px",
+        border: "5px solid black",
         zIndex: 1000,
       }}
     >
-      <ChatBubble
-        onClick={() => setIsOpen(!isOpen)}
+      
+      <Box
+        onClick={handleToggleChat}
         sx={{
           position: "absolute",
           top: 0,
-          left: -40,
-          color: 'primary.main',
+          left: -60,
+          width: 100,
+          // transform: isOpen ? "translateX(0)" : "translateX(100%)",
+          // transition: "transform 0.3s ease-in-out",
+          bgcolor: `primary.main`,
+          borderRadius: "20px",
+          zIndex: 0,
         }}
       >
-        <ExpandMoreIcon />
-      </ChatBubble>
-
+        <Badge badgeContent={unreadCount} color="secondary">
+         
+        </Badge>
+       </Box>
+        <ChatBubble
+          onClick={handleToggleChat}
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: -40,
+            color: "secondary.main",
+          }}
+        >
+          <ExpandMoreIcon />
+        </ChatBubble>
       <Typography
         variant="h6"
         sx={{
           p: 2,
           textAlign: "center",
-          color: 'primary.contrastText',
+          color: "primary.contrastText",
         }}
       >
         Chat
       </Typography>
       <Typography>
-        <List sx={{ maxHeight: 200, overflow: "auto" }}>
-          {/* <ListSubheader>Chat History</ListSubheader> */}
+        <List sx={{ height: 200, overflow: "auto" }}>
           <Card
             sx={{
               width: "90%",
@@ -142,6 +170,7 @@ const ChatWindow: React.FC = () => {
         </Box>
       </Typography>
     </Box>
+    </>
   );
 };
 

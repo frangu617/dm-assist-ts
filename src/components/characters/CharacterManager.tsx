@@ -8,6 +8,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface Character {
   _id: string;
@@ -25,6 +26,7 @@ const apiUrl = import.meta.env.VITE_APP_URL;
 
 const CharacterManager: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
+  const navigate = useNavigate();
   const [expandedCharacterId, setExpandedCharacterId] = useState<string | null>(
     null
   );
@@ -93,6 +95,9 @@ const CharacterManager: React.FC = () => {
     </div>
   );
 
+  const handleEdit = (characterId: string) => {
+    navigate(`/editor/${characterId}`);
+  }
   return (
     <div>
       <h3>Characters:</h3>
@@ -112,6 +117,13 @@ const CharacterManager: React.FC = () => {
                     {expandedCharacterId === character._id
                       ? "Collapse"
                       : "Expand"}
+                  </Button>
+                  <Button
+                    sx={{ marginLeft: 1 }}
+                    variant="contained"
+                    onClick={() => handleEdit(character._id)}
+                  >
+                    Edit
                   </Button>
                   <Button
                     sx={{ marginLeft: 1 }}

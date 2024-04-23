@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Grid, Button, TextField, Card, CardContent } from "@mui/material";
+import { Grid, Button, TextField, Card, CardContent, Tooltip } from "@mui/material";
 import RaceSelector from "./RaceSelector";
 import AlignmentSelector from "./AlignmentSelector";
 import ClassSelector from "./ClassSelector";
 import BackgroundSelector from "./BackgroundSelector";
 import Abilities from "./AbilitySelector";
 import SkillsSelector from "./SkillsSelector";
+import { useCurrentUser } from "../contexts/CurrentUser";
 // import dotenv from "dotenv";
 // dotenv.config();
 
@@ -26,6 +27,7 @@ interface Character {
 }
 
 export default function CharacterCreator() {
+  const { currentUser } = useCurrentUser();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [resetKey, setResetKey] = useState(0);
   const [newCharacter, setNewCharacter] = useState<Character>({
@@ -136,7 +138,7 @@ export default function CharacterCreator() {
   };
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       <h2>D&D Character Creator</h2>
       <form onSubmit={handleCharacterSubmit}>
         <Card style={{ marginBottom: "20px" }}>
@@ -266,9 +268,19 @@ export default function CharacterCreator() {
             </Grid>
           </CardContent>
         </Card>
+        {currentUser ?(
         <Button variant="contained" type="submit">
           Add Character
         </Button>
+        ):(
+          <Tooltip title="You must be logged in to add a character.">
+            <span id = "disabled-tooltip">
+          <Button variant="contained" type="submit" disabled>
+            Add Character
+          </Button>
+            </span>
+          </Tooltip>
+        )}
       </form>
     </div>
   );

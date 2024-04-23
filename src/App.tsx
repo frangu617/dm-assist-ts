@@ -1,14 +1,11 @@
 import {
   BrowserRouter as Router,
   Route,
-  NavLink,
   Routes,
 } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Container } from "@mui/material";
 
-// import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import customTheme from "./components/themes/customTheme";
-// import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import CharacterManager from "./components/characters/CharacterManager";
 import CharacterCreator from "./components/characters/CharacterCreator";
@@ -27,11 +24,10 @@ import SignUpForm from "./components/users/SignUpForm";
 import { CurrentUserProvider } from "./components/contexts/CurrentUser";
 import Navigation from "./components/Navigation";
 import ChatWindow from "./components/users/Message";
+import CharacterEditor from "./components/characters/CharacterEditor";
 
-// import {jwtDecode} from "jwt-decode";
 
 function App() {
-  // const navigate = useNavigate();
   const setUsername = (username: string) => {
     localStorage.setItem("username", username);
   };
@@ -52,12 +48,6 @@ function App() {
                 variant="h6"
                 style={{ flexGrow: 1, marginLeft: "20px" }}
               >
-                <NavLink
-                  to="/"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  🐉 DM Assist 🐉
-                </NavLink>
               </Typography>
               <Navigation />
             </Toolbar>
@@ -91,6 +81,7 @@ function App() {
               <Route path="/rules-search" element={<RulesSearch />} />
               <Route path="/alignment" element={<Alignment />} />
               <Route path="/classes" element={<DnDClasses />} />
+              <Route path="/editor/:characterId" element={<CharacterEditor />} />
             </Routes>
           </Container>
           <ChatWindow />
