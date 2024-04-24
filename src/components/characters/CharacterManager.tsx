@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  LinearProgress
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -27,6 +28,8 @@ const apiUrl = import.meta.env.VITE_APP_URL;
 const CharacterManager: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(true);
+
   const [expandedCharacterId, setExpandedCharacterId] = useState<string | null>(
     null
   );
@@ -40,8 +43,14 @@ const CharacterManager: React.FC = () => {
         },
       })
         .then((response) => response.json())
-        .then((data: Character[]) => setCharacters(data))
-        .catch((error) => console.error("Error fetching characters:", error));
+        .then((data: Character[]) => {
+          setCharacters(data);
+          setLoading(false); // Set loading to false after data is received
+        })
+        .catch((error) => {
+          console.error("Error fetching characters:", error);
+        setLoading(false);
+      });
     }
   }, []);
 
@@ -101,8 +110,9 @@ const CharacterManager: React.FC = () => {
   return (
     <div>
       <h3>Characters:</h3>
-
-      {characters.length > 0 ? (
+      {loading ? (
+        <LinearProgress /> // Display the spinner while data is loading
+      ) : characters.length > 0 ? (
         <ul style={{ listStyleType: "none" }}>
           {characters.map((character) => (
             <Card key={character._id} sx={{ minWidth: 275, marginTop: 2 }}>
