@@ -45,6 +45,7 @@ Please run npm install for the backend folder, separately from the client folder
     Routing: React Router DOM
     HTTP Client: Axios
     Real-time Communication: Socket.io-client
+    D&D API: https://www.dnd5eapi.co/api/
     
   #### Backend:
     Framework: Express.js
