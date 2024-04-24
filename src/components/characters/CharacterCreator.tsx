@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Grid, Button, TextField, Card, CardContent, Tooltip } from "@mui/material";
+import {
+  Grid,
+  Button,
+  TextField,
+  Card,
+  CardContent,
+  Tooltip,
+  Alert,
+} from "@mui/material";
 import RaceSelector from "./RaceSelector";
 import AlignmentSelector from "./AlignmentSelector";
 import ClassSelector from "./ClassSelector";
@@ -30,6 +38,9 @@ export default function CharacterCreator() {
   const { currentUser } = useCurrentUser();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [resetKey, setResetKey] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
   const [newCharacter, setNewCharacter] = useState<Character>({
     name: "",
     race: "",
@@ -98,6 +109,8 @@ export default function CharacterCreator() {
           inventory: [],
           description: "",
         });
+        setShowAlert(true);
+        setAlertMessage("Character created successfully!");
       })
       .catch((error) => console.error("Error creating character:", error));
 
@@ -141,6 +154,11 @@ export default function CharacterCreator() {
     <div style={{ padding: "20px" }}>
       <h2>D&D Character Creator</h2>
       <form onSubmit={handleCharacterSubmit}>
+        {showAlert && (
+          <Alert severity="success" onClose={() => setShowAlert(false)}>
+            {alertMessage}
+          </Alert>
+        )}
         <Card style={{ marginBottom: "20px" }}>
           <CardContent>
             <h3>Character Details:</h3>
@@ -268,16 +286,16 @@ export default function CharacterCreator() {
             </Grid>
           </CardContent>
         </Card>
-        {currentUser ?(
-        <Button variant="contained" type="submit">
-          Add Character
-        </Button>
-        ):(
-          <Tooltip title="You must be logged in to add a character.">
-            <span id = "disabled-tooltip">
-          <Button variant="contained" type="submit" disabled>
+        {currentUser ? (
+          <Button variant="contained" type="submit">
             Add Character
           </Button>
+        ) : (
+          <Tooltip title="You must be logged in to add a character.">
+            <span id="disabled-tooltip">
+              <Button variant="contained" type="submit" disabled>
+                Add Character
+              </Button>
             </span>
           </Tooltip>
         )}
